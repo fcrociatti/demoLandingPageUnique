@@ -301,7 +301,8 @@ h3 {
 .hero__photo img {
   width: 100%;
   aspect-ratio: 4 / 5;
-  max-height: 72svh;
+  /* encolhe em tela baixa para os botões do topo caberem na primeira tela */
+  max-height: max(220px, min(72svh, calc(100svh - 300px)));
   object-fit: cover;
 }
 
@@ -1418,7 +1419,7 @@ h3 {
   }
 
   .hero__photo img {
-    max-height: min(560px, 58svh);
+    max-height: min(560px, 58svh, calc(100svh - 340px));
     box-shadow: 0 30px 60px -30px rgb(0 0 0 / 0.8);
   }
 
@@ -1461,6 +1462,18 @@ h3 {
     z-index: 2;
     align-self: end;
     padding: 0;
+  }
+
+  /* notebook de tela baixa (ex.: 1366×768): o logotipo encosta mais no topo e só uma
+     peça fica ao lado da foto, para os botões caberem na primeira tela */
+  @media (max-height: 820px) {
+    .hero__mark {
+      margin: 12px 0 24px;
+    }
+
+    .hero__look li:nth-child(2) {
+      display: none;
+    }
   }
 
   .hero__frase {
