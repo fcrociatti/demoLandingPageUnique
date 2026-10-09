@@ -49,8 +49,8 @@ window.SITE_CONFIG = {
     nomeCompleto: "Unique",
     frase: "Moda • Estilo • Exclusividade",
     botao: "Ver peças",
-    // Foto do topo: a fachada da loja. posicao = enquadramento (CSS object-position).
-    foto: { src: "assets/loja/fachada.webp", alt: "Fachada da Unique na Av. Itaberaba, com o letreiro da loja", posicao: "center top" },
+    // Foto do topo (alta resolução, 1066×1332). posicao = enquadramento (CSS object-position).
+    foto: { src: "assets/loja/banner-tricot.webp", alt: "Modelo vestindo o Tricot Zara diante da parede escura", posicao: "center 15%", largura: 1066, altura: 1332 },
   },
 
   // Faixa vermelha logo abaixo do topo. Para tirar, troque ativo para false.
@@ -70,8 +70,8 @@ window.SITE_CONFIG = {
     mensagem: "Olá! Vim pelo site e queria tirar uma dúvida.",
     // Fotos de dentro da loja (verticais 3:4). Lista vazia esconde o bloco.
     fotos: [
+      { src: "assets/loja/fachada.webp", alt: "Fachada da Unique na Av. Itaberaba, com o letreiro da loja" },
       { src: "assets/loja/arara-1.webp", alt: "Arara de camisetas pretas na loja" },
-      { src: "assets/loja/arara-2.webp", alt: "Arara de camisetas com cabides de madeira na loja" },
     ],
     horario: {
       0: [],

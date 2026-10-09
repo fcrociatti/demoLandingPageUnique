@@ -11,14 +11,14 @@ HTML, CSS e JavaScript puros: não precisa instalar nada nem rodar build.
 
 ## Seções
 
-1. Topo: nome em texto, foto da fachada, "Moda • Estilo • Exclusividade", botões Ver peças e WhatsApp, endereço e selo aberto/fechado.
+1. Topo: nome em texto, foto do Tricot Zara em alta resolução, "Moda • Estilo • Exclusividade", botões Ver peças e WhatsApp, endereço e selo aberto/fechado.
 2. Faixa de promoção (único vermelho da página).
 3. Categorias: um bloco com foto por tipo de peça; tocar filtra a vitrine.
 4. Destaque da estação ("Para os dias frios"): troque as peças em `destaque.pecas`.
 5. Como pedir: três passos.
 6. Marcas: só em texto, a partir das peças; tocar filtra a vitrine.
 7. Vitrine: filtros por marca e tipo, ordenar por preço, peça aberta com Pedir no WhatsApp.
-8. A loja: endereço, horário, fotos de dentro, Como chegar e WhatsApp.
+8. A loja: endereço, horário, fachada e foto de dentro, Como chegar e WhatsApp.
 9. Rodapé.
 
 Para tirar uma seção, apague o bloco dela no `config.js` (`categorias`, `destaque`,
@@ -32,7 +32,7 @@ config.js         TODOS os dados da loja e das peças: troque só este arquivo
 css/styles.css    visual
 js/app.js         monta a página a partir do config.js
 assets/produtos/  fotos das peças (2 por peça)
-assets/loja/      fachada (topo) e fotos de dentro da loja
+assets/loja/      banner do topo (alta resolução), fachada e fotos de dentro da loja
 assets/categorias/ foto opcional de um tipo (senão usa a 1ª peça daquele tipo)
 ```
 

@@ -142,7 +142,7 @@
         </nav>
       </div>
       <div class="hero__inner">
-        ${f && f.src ? `<figure class="hero__photo"><img src="${esc(f.src)}" alt="${esc(f.alt || "")}" width="533" height="666" fetchpriority="high" decoding="async"${
+        ${f && f.src ? `<figure class="hero__photo"><img src="${esc(f.src)}" alt="${esc(f.alt || "")}" width="${f.largura || 1066}" height="${f.altura || 1332}" fetchpriority="high" decoding="async"${
           f.posicao ? ` style="object-position:${esc(f.posicao)}"` : ""
         }></figure>` : ""}
         <div class="hero__text">
