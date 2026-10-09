@@ -49,10 +49,10 @@ window.SITE_CONFIG = {
     nomeCompleto: "Unique",
     frase: "Moda • Estilo • Exclusividade",
     botao: "Ver peças",
-    // Foto do topo (alta resolução, 1066×1332). posicao = enquadramento (CSS object-position).
-    foto: { src: "assets/loja/banner-tricot.webp", alt: "Modelo vestindo o Tricot Zara diante da parede escura", posicao: "center 15%", largura: 1066, altura: 1332 },
-    // No computador, duas peças ao lado da foto do topo (ids da lista de produtos).
-    lookbook: ["puffer-preta", "bomber-ralph-lauren"],
+    // Foto do topo (alta resolução, 903×1129, sem rosto). posicao = enquadramento (CSS object-position).
+    foto: { src: "assets/loja/banner-tricot-detalhe.webp", alt: "Tricot Zara preto em detalhe, com a trama listrada", posicao: "center top", largura: 903, altura: 1129 },
+    // No computador, duas peças ao lado da foto do topo: id da peça, ou { peca, foto } para outra foto dela.
+    lookbook: [{ peca: "bomber-ralph-lauren", foto: "assets/loja/look-bomber-detalhe.webp" }, "calca-zara"],
   },
 
   // Faixa vermelha logo abaixo do topo. Para tirar, troque ativo para false.

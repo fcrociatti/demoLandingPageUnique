@@ -163,14 +163,41 @@
     if ("ResizeObserver" in window) new ResizeObserver(medir).observe(el);
   }
 
+  /* ---------- Logotipo ---------- */
+
+  // O logotipo da Unique redesenhado em vetor a partir do letreiro da fachada:
+  // letras largas e geométricas, o N espelhado (И) cortado ao meio na diagonal
+  // e o Q com o rabo reto. Cada letra é um <g> para a entrada letra por letra.
+  const LOGO_LETRAS = [
+    [0, '<path d="M0 0H30V55A15 15 0 0 0 45 70H145A15 15 0 0 0 160 55V0H190V55A45 45 0 0 1 145 100H45A45 45 0 0 1 0 55Z"/>'],
+    [212, '<path d="M0 0H30V70L75 41.4V71.4L30 100H0Z"/><path d="M95 28.6L140 0H170V100H140V30L95 58.6Z"/>'],
+    [404, '<path d="M0 0H30V100H0Z"/>'],
+    [
+      456,
+      '<path fill-rule="evenodd" d="M45 0H145A45 45 0 0 1 190 45V55A45 45 0 0 1 145 100H45A45 45 0 0 1 0 55V45A45 45 0 0 1 45 0ZM45 30A15 15 0 0 0 30 45V55A15 15 0 0 0 45 70H145A15 15 0 0 0 160 55V45A15 15 0 0 0 145 30Z"/><path d="M70 90H140V122H95Z"/>',
+    ],
+    [668, '<path d="M0 0H30V55A15 15 0 0 0 45 70H145A15 15 0 0 0 160 55V0H190V55A45 45 0 0 1 145 100H45A45 45 0 0 1 0 55Z"/>'],
+    [880, '<path d="M0 0H150V28H30V36H140V64H30V72H150V100H0Z"/>'],
+  ];
+
+  function logo(classe, nome) {
+    const letras = LOGO_LETRAS.map(([x, d], i) => `<g style="--i:${i}"><g transform="translate(${x} 0)">${d}</g></g>`).join("");
+    return `<svg class="${classe}" viewBox="0 0 1030 126" role="img" aria-label="${esc(nome)}" xmlns="http://www.w3.org/2000/svg">${letras}</svg>`;
+  }
+
   /* ---------- Topo ---------- */
 
   function renderTopo() {
     const m = C.marca;
     const l = C.loja;
     const f = m.foto;
-    const letras = [...m.nome].map((c, i) => `<span style="--i:${i}">${esc(c)}</span>`).join("");
-    const look = (m.lookbook || []).map(porId).filter(Boolean);
+    // lookbook: id da peça, ou { peca, foto } para usar outra foto da mesma peça
+    const look = (m.lookbook || [])
+      .map((item) => {
+        const p = porId(typeof item === "string" ? item : item.peca);
+        return p && { p, foto: (typeof item === "object" && item.foto) || p.fotos[0] };
+      })
+      .filter(Boolean);
     $("#topo").innerHTML = `
       <div class="topbar">
         ${l ? `<p class="topbar__status">${selo(l.horario)}</p>` : ""}
@@ -187,12 +214,12 @@
           look.length
             ? `<ul class="hero__look">${look
                 .map(
-                  (p) => `<li><a href="#peca=${esc(p.id)}" data-peca="${esc(p.id)}"><span class="photo"><img src="${esc(p.fotos[0])}" alt="${esc(p.nome)}" width="600" height="800" decoding="async"></span><span class="hero__look-nome">${esc(p.nome)} · ${preco(p.preco)}</span></a></li>`
+                  ({ p, foto }) => `<li><a href="#peca=${esc(p.id)}" data-peca="${esc(p.id)}"><span class="photo"><img src="${esc(foto)}" alt="${esc(p.nome)}" width="600" height="800" decoding="async"></span><span class="hero__look-nome">${esc(p.nome)} · ${preco(p.preco)}</span></a></li>`
                 )
                 .join("")}</ul>`
             : ""
         }
-        <h1 class="hero__mark"><span class="sr">${esc(m.nome)}</span><span class="hero__word" aria-hidden="true">${letras}</span></h1>
+        <h1 class="hero__mark">${logo("hero__word", m.nome)}</h1>
         <div class="hero__text">
           <p class="hero__frase">${esc(m.frase)}</p>
           <div class="hero__actions">
@@ -202,19 +229,6 @@
           ${l ? `<p class="hero__meta">${icon("pin")}<span>${esc(l.endereco)} · ${esc(l.cidade.replace(/ - SP$/, ""))}</span></p>` : ""}
         </div>
       </div>`;
-    ajustarMarca();
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(ajustarMarca);
-  }
-
-  // O nome ocupa a largura toda, de ponta a ponta: mede uma vez quanto ele ocupa em 100px
-  // e o CSS escala pela largura do container (cqw), sem depender de evento de resize
-  function ajustarMarca() {
-    const w = $(".hero__word");
-    if (!w) return;
-    w.style.fontSize = "100px";
-    const largura = w.getBoundingClientRect().width;
-    w.style.fontSize = "";
-    if (largura) w.parentElement.style.setProperty("--marca-k", (100 / largura).toFixed(4));
   }
 
   /* ---------- Promoção: letreiro corrido ---------- */
@@ -646,7 +660,7 @@
     const ano = new Date().getFullYear();
     $("#rodape").innerHTML = `
       <div class="wrap foot">
-        <p class="foot__logo">${esc(C.marca.nome)}</p>
+        ${logo("foot__logo", C.marca.nome)}
         <p class="foot__tagline">${esc(C.marca.frase)}</p>
         <ul class="foot__links">
           ${ig ? `<li><a href="${esc(ig.url)}" ${ext}>${icon("instagram")}${esc(ig.usuario)}</a></li>` : ""}

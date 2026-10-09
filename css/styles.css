@@ -318,27 +318,22 @@ h3 {
   display: none;
 }
 
-/* O nome de ponta a ponta: o js ajusta o tamanho para caber exatamente na largura */
+/* O logotipo de ponta a ponta, sobre o pé escuro da foto */
 .hero__mark {
   position: relative;
   z-index: 2;
   min-width: 0;
-  container-type: inline-size;
   padding: 0 var(--gutter);
-  margin-top: -0.24em;
-  font: 800 27vw/0.8 var(--cond);
-  line-height: 0.8;
+  margin-top: -16%;
+  line-height: 0;
 }
 
 .hero__word {
-  display: inline-block;
-  white-space: nowrap;
-  font-size: calc(var(--marca-k, 0.27) * 100cqw);
-  letter-spacing: -0.01em;
-}
-
-.hero__word span {
-  display: inline-block;
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  fill: var(--on-black);
 }
 
 .hero__text {
@@ -1255,8 +1250,10 @@ h3 {
 }
 
 .foot__logo {
-  font: 800 56px/1 var(--cond);
-  letter-spacing: 0.12em;
+  display: block;
+  width: min(260px, 70%);
+  height: auto;
+  fill: var(--on-black);
 }
 
 .foot__tagline {
@@ -1300,15 +1297,15 @@ h3 {
 /* ---------- Movimento: um só gesto, o de "revelar" ---------- */
 
 @media (prefers-reduced-motion: no-preference) {
-  /* o nome sobe letra por letra ao abrir a página */
-  .hero__word span {
+  /* o logotipo sobe letra por letra ao abrir a página */
+  .hero__word > g {
     animation: subir 0.9s var(--ease) both;
-    animation-delay: calc(var(--i) * 55ms + 120ms);
+    animation-delay: calc(var(--i) * 60ms + 120ms);
   }
 
   @keyframes subir {
     from {
-      transform: translateY(0.3em);
+      transform: translateY(40px);
       opacity: 0.1;
       filter: blur(6px);
     }
@@ -1396,8 +1393,8 @@ h3 {
     font-size: 36px;
   }
 
-  /* Topo como capa de revista: o nome no alto, de ponta a ponta; a foto e os looks
-     passam na frente da metade de baixo das letras; texto à esquerda */
+  /* Topo como capa: o logotipo no alto, de ponta a ponta; embaixo, texto à
+     esquerda, a foto no centro e duas peças à direita */
   .hero__inner {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr) minmax(0, 0.5fr);
     grid-template-rows: auto auto;
@@ -1411,7 +1408,7 @@ h3 {
     grid-row: 1;
     z-index: 1;
     padding: 0;
-    margin: 0 0 -0.42em;
+    margin: 28px 0 36px;
   }
 
   .hero__photo {
@@ -1421,7 +1418,7 @@ h3 {
   }
 
   .hero__photo img {
-    max-height: min(520px, 54svh);
+    max-height: min(560px, 58svh);
     box-shadow: 0 30px 60px -30px rgb(0 0 0 / 0.8);
   }
 

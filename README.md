@@ -14,9 +14,9 @@ HTML, CSS e JavaScript puros: não precisa instalar nada nem rodar build.
 Direção visual "lookbook na parede": a parede escura das fotos do catálogo vira o
 chão de algumas seções, para as peças se fundirem na página.
 
-1. Topo: faixa de prévia, selo aberto/fechado, foto do Tricot Zara em alta e o nome
-   UNIQUE de ponta a ponta (no computador, como capa de revista, com duas peças ao
-   lado: `marca.lookbook`).
+1. Topo: faixa de prévia, selo aberto/fechado, foto do Tricot Zara em detalhe (sem
+   rosto, em alta) e o logotipo de ponta a ponta. No computador, duas peças ao lado
+   (`marca.lookbook`, também sem rosto).
 2. Promoção em letreiro corrido (único vermelho da página). Quem desativa animações
    no aparelho vê o texto parado.
 3. Vitrine: barra de categorias fixa (gruda abaixo da faixa de prévia), marcas,
@@ -27,7 +27,12 @@ chão de algumas seções, para as peças se fundirem na página.
 7. A loja: endereço, horário, fachada e foto de dentro, Como chegar e WhatsApp.
 8. Rodapé.
 
-Movimento: o nome sobe letra por letra ao abrir e as fotos se revelam ao entrar na
+Logotipo: redesenhado em vetor (SVG) a partir do letreiro da fachada, com o N
+espelhado (И) cortado ao meio na diagonal e o Q de rabo reto. Fica em `js/app.js`
+(`LOGO_LETRAS`) e aparece no topo e no rodapé. É uma recriação: se a Unique tiver o
+arquivo original do logotipo, troque por ele.
+
+Movimento: o logotipo sobe letra por letra ao abrir e as fotos se revelam ao entrar na
 tela (onde o navegador acompanha a rolagem). A foto do cartão "cresce" até a janela
 da peça onde há suporte. Tudo some com "reduzir movimento" ligado no aparelho.
 
@@ -95,6 +100,11 @@ Pendências atuais:
 `tema: "claro"` ou `"escuro"`, com as cores em `cores`. Vermelho (`cores.destaque`)
 só na faixa de promoção; preto (`cores.marca`) no topo e no rodapé. Para comparar
 sem publicar, use `?tema=escuro` no endereço.
+
+## Publicar uma mudança
+
+No `index.html`, aumente o número em `?v=` dos três arquivos (`styles.css`,
+`config.js`, `app.js`) a cada envio, para quem já abriu a página ver a versão nova.
 
 ## Testar no computador
 
