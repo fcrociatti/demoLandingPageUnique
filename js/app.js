@@ -130,13 +130,30 @@
   function renderTopo() {
     const m = C.marca;
     const l = C.loja;
+    const f = m.foto;
+    // "Moda • Estilo • Exclusividade" vira três linhas no título
+    const linhas = m.frase.split("•").map((t) => `<span>${esc(t.trim())}</span>`).join("");
     $("#topo").innerHTML = `
+      <div class="topbar">
+        <p class="topbar__logo">${esc(m.nome)}</p>
+        <nav class="topbar__nav" aria-label="Seções">
+          <a href="#pecas">Peças</a><a href="#loja">A loja</a>
+          ${l && l.whatsapp ? `<a class="topbar__wa" href="${linkWa(l.whatsapp, l.mensagem)}" ${ext} aria-label="WhatsApp da loja">${icon("whatsapp")}</a>` : ""}
+        </nav>
+      </div>
       <div class="hero__inner">
-        <p class="hero__logo" aria-label="${esc(m.nome)}">${esc(m.nome)}</p>
-        <p class="hero__tagline">${esc(m.frase)}</p>
-        <a class="btn btn--light hero__cta" href="#pecas">${esc(m.botao)} ${icon("seta")}</a>
-        ${l ? `<p class="hero__meta">${icon("pin")}<span>${esc(l.endereco)} · ${esc(l.cidade.replace(/ - SP$/, ""))}</span></p>
-        <p class="hero__meta">${selo(l.horario)}</p>` : ""}
+        ${f && f.src ? `<figure class="hero__photo"><img src="${esc(f.src)}" alt="${esc(f.alt || "")}" width="533" height="666" fetchpriority="high" decoding="async"${
+          f.posicao ? ` style="object-position:${esc(f.posicao)}"` : ""
+        }></figure>` : ""}
+        <div class="hero__text">
+          <h1 class="hero__title" aria-label="${esc(m.frase)}">${linhas}</h1>
+          <div class="hero__actions">
+            <a class="btn btn--light" href="#pecas">${esc(m.botao)} ${icon("seta")}</a>
+            ${l && l.whatsapp ? `<a class="btn btn--outline-light" href="${linkWa(l.whatsapp, l.mensagem)}" ${ext}>${icon("whatsapp")}WhatsApp</a>` : ""}
+          </div>
+          ${l ? `<p class="hero__meta">${icon("pin")}<span>${esc(l.endereco)} · ${esc(l.cidade.replace(/ - SP$/, ""))}</span></p>
+          <p class="hero__meta">${selo(l.horario)}</p>` : ""}
+        </div>
       </div>`;
   }
 
@@ -162,7 +179,10 @@
   const estado = { marca: "", tipo: "", ordem: "destaques" };
 
   const rotuloTipo = (t) => (TIPOS[t] && TIPOS[t].rotulo) || t;
-  const marcas = () => [...new Set(PRODUTOS.map((p) => p.marca))].sort((a, b) => a.localeCompare(b, "pt-BR"));
+  // Peça sem marca (null) aparece na vitrine, mas não vira opção de filtro
+  const marcas = () => [...new Set(PRODUTOS.map((p) => p.marca).filter(Boolean))].sort((a, b) => a.localeCompare(b, "pt-BR"));
+  const daMarca = (m) => PRODUTOS.filter((p) => p.marca === m).length;
+  const doTipo = (t) => PRODUTOS.filter((p) => p.tipo === t);
   const tipos = () => {
     const usados = new Set(PRODUTOS.map((p) => p.tipo));
     return [...Object.keys(TIPOS).filter((t) => usados.has(t)), ...[...usados].filter((t) => !TIPOS[t])];
@@ -199,19 +219,17 @@
       <span class="filter__label">${esc(rotulo)}</span><div class="filter__chips">${botoes}</div></div>`;
   }
 
-  function cartao(p, i) {
+  function cartao(p) {
     const foto = p.fotos[0];
-    // As 4 primeiras fotos aparecem logo; as demais só perto da tela
-    const carga = i < 4 ? "" : ' loading="lazy"';
     return `<li class="card">
       <a class="card__link" href="#peca=${esc(p.id)}" data-peca="${esc(p.id)}">
-        <div class="photo"><img src="${esc(foto)}" alt="${esc(p.nome)}, foto de frente" width="255" height="340"${carga} decoding="async"></div>
+        <div class="photo"><img src="${esc(foto)}" alt="${esc(p.nome)}, foto de frente" width="600" height="800" loading="lazy" decoding="async"></div>
         <div class="card__body">
-          <p class="card__marca">${esc(p.marca)}</p>
+          <p class="card__marca">${esc(p.marca || rotuloTipo(p.tipo))}</p>
           <h3 class="card__nome">${esc(p.nome)}</h3>
           <p class="card__preco">${preco(p.preco)}</p>
           <p class="card__tam">${tamanhosTexto(p)}</p>
-          ${pend(V.pendenciaFotos)}
+          ${pend(p.pendencia)}
         </div>
       </a>
     </li>`;
@@ -265,13 +283,15 @@
       estado.marca = estado.tipo = "";
       atualizarVitrine();
     });
-    $("#grade").addEventListener("click", (e) => {
-      const a = e.target.closest("[data-peca]");
-      if (!a) return;
-      e.preventDefault();
-      abrirPeca(a.dataset.peca, true);
-    });
     atualizarVitrine();
+  }
+
+  // Categorias e marcas: filtra a vitrine e rola até ela
+  function filtrarEIr(grupo, valor) {
+    estado.marca = estado.tipo = "";
+    estado[grupo] = valor;
+    atualizarVitrine();
+    $("#pecas").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
   }
 
   function atualizarVitrine() {
@@ -280,6 +300,98 @@
     $("#grade").innerHTML = itens.map(cartao).join("");
     $("#contagem").textContent = `${itens.length} ${itens.length === 1 ? "peça" : "peças"}`;
     $("#vazio").hidden = itens.length > 0;
+  }
+
+  /* ---------- Antes da vitrine: categorias, destaque, como pedir, marcas ---------- */
+
+  function renderCategorias() {
+    const el = $("#categorias");
+    const lista = tipos();
+    if (!C.categorias || lista.length < 2) {
+      el.hidden = true;
+      return;
+    }
+    const blocos = lista
+      .map((t) => {
+        const pecas = doTipo(t);
+        const tp = TIPOS[t] || {};
+        const foto = tp.foto || pecas[0].fotos[0];
+        const nome = tp.plural || rotuloTipo(t);
+        return `<li><button type="button" class="cat" data-tipo="${esc(t)}">
+          <span class="cat__photo"><img src="${esc(foto)}" alt="" width="600" height="800" loading="lazy" decoding="async"></span>
+          <span class="cat__nome">${esc(nome)}</span>
+          <span class="cat__n">${pecas.length} ${pecas.length === 1 ? "peça" : "peças"}</span>
+        </button></li>`;
+      })
+      .join("");
+    el.innerHTML = `
+      <div class="wrap">
+        <h2 class="kicker" id="categorias-titulo"><span>${esc(C.categorias.titulo || "Categorias")}</span></h2>
+      </div>
+      <ul class="rail rail--cats">${blocos}</ul>`;
+    el.addEventListener("click", (e) => {
+      const b = e.target.closest("[data-tipo]");
+      if (b) filtrarEIr("tipo", b.dataset.tipo);
+    });
+  }
+
+  function renderDestaque() {
+    const d = C.destaque;
+    const el = $("#destaque");
+    const pecas = d && d.pecas ? d.pecas.map((id) => PRODUTOS.find((p) => p.id === id)).filter(Boolean) : [];
+    if (!pecas.length) {
+      el.hidden = true;
+      return;
+    }
+    el.innerHTML = `
+      <div class="wrap feature__head">
+        <h2 class="kicker" id="destaque-titulo"><span>${esc(d.titulo)}</span></h2>
+        ${d.texto ? `<p class="feature__texto">${esc(d.texto)}</p>` : ""}
+      </div>
+      <ul class="rail rail--cards">${pecas.map(cartao).join("")}</ul>`;
+  }
+
+  function renderComoPedir() {
+    const c = C.comoPedir;
+    const el = $("#como-pedir");
+    if (!c || !c.passos || !c.passos.length) {
+      el.hidden = true;
+      return;
+    }
+    el.innerHTML = `
+      <div class="wrap">
+        <h2 class="kicker" id="como-pedir-titulo"><span>${esc(c.titulo)}</span></h2>
+        <ol class="steps__list">
+          ${c.passos
+            .map(
+              (p, i) => `<li class="step"><span class="step__n" aria-hidden="true">${i + 1}</span>
+              <div><h3 class="step__titulo">${esc(p.titulo)}</h3><p class="step__texto">${esc(p.texto)}</p></div></li>`
+            )
+            .join("")}
+        </ol>
+      </div>`;
+  }
+
+  function renderMarcas() {
+    const el = $("#marcas");
+    const lista = marcas();
+    if (!C.marcas || lista.length < 2) {
+      el.hidden = true;
+      return;
+    }
+    el.innerHTML = `
+      <div class="wrap">
+        <h2 class="kicker" id="marcas-titulo"><span>${esc(C.marcas.titulo || "Marcas")}</span></h2>
+        <ul class="brands__list">
+          ${lista
+            .map((m) => `<li><button type="button" class="brand" data-marca="${esc(m)}">${esc(m)}<span class="brand__n">${daMarca(m)}</span></button></li>`)
+            .join("")}
+        </ul>
+      </div>`;
+    el.addEventListener("click", (e) => {
+      const b = e.target.closest("[data-marca]");
+      if (b) filtrarEIr("marca", b.dataset.marca);
+    });
   }
 
   /* ---------- Peça aberta ---------- */
@@ -294,7 +406,7 @@
     const promo = C.promocao && C.promocao.ativo ? C.promocao : null;
     const fotos = p.fotos
       .map(
-        (f, i) => `<li class="gallery__slide"><div class="photo"><img src="${esc(f)}" alt="${esc(p.nome)}, foto ${i + 1} de ${p.fotos.length}" width="255" height="340" decoding="async"></div></li>`
+        (f, i) => `<li class="gallery__slide"><div class="photo"><img src="${esc(f)}" alt="${esc(p.nome)}, foto ${i + 1} de ${p.fotos.length}" width="600" height="800" decoding="async"></div></li>`
       )
       .join("");
     const pontos = p.fotos.length > 1 ? `<div class="gallery__dots" aria-hidden="true">${p.fotos.map((_, i) => `<span${i ? "" : ' class="on"'}></span>`).join("")}</div>` : "";
@@ -312,14 +424,14 @@
           ${setas}${pontos}
         </div>
         <div class="product__info">
-          <p class="card__marca">${esc(p.marca)} · ${esc(rotuloTipo(p.tipo))}</p>
+          <p class="card__marca">${p.marca ? `${esc(p.marca)} · ` : ""}${esc(rotuloTipo(p.tipo))}</p>
           <h2 class="product__nome" id="peca-nome">${esc(p.nome)}</h2>
           <p class="product__preco">${preco(p.preco)}</p>
           <p class="product__tam">${tamanhosTexto(p)}</p>
           ${l && l.whatsapp ? `<a class="btn btn--dark btn--block" href="${linkWa(l.whatsapp, mensagem(p))}" ${ext}>${icon("whatsapp")}Pedir no WhatsApp</a>` : ""}
           <p class="product__nota">Tamanho e disponibilidade você confirma direto com a loja.</p>
           ${promo ? `<p class="product__promo"><b>${esc(promo.titulo)}:</b> ${esc(promo.texto)} ${pend(promo.pendencia)}</p>` : ""}
-          ${pend(V.pendenciaFotos)}
+          ${pend(p.pendencia)}
         </div>
       </div>`;
 
@@ -417,6 +529,13 @@
               )
               .join("")}
           </dl>
+          ${
+            l.fotos && l.fotos.length
+              ? `<div class="store__photos">${l.fotos
+                  .map((f) => `<div class="photo photo--cover"><img src="${esc(f.src)}" alt="${esc(f.alt || "")}" width="533" height="711" loading="lazy" decoding="async"></div>`)
+                  .join("")}</div>`
+              : ""
+          }
           <div class="store__actions">
             <a class="btn btn--dark" href="${linkRota(l)}" ${ext}>${icon("rota")}Como chegar</a>
             ${l.whatsapp ? `<a class="btn btn--ghost" href="${linkWa(l.whatsapp, l.mensagem)}" ${ext}>${icon("whatsapp")}WhatsApp</a>` : pend("WhatsApp")}
@@ -451,9 +570,21 @@
   renderPrevia();
   renderTopo();
   renderPromo();
+  renderCategorias();
+  renderDestaque();
+  renderComoPedir();
+  renderMarcas();
   renderVitrine();
   renderLoja();
   renderRodape();
+
+  // Toque numa peça (vitrine ou destaque) abre a janela dela
+  document.addEventListener("click", (e) => {
+    const a = e.target.closest("a[data-peca]");
+    if (!a || e.ctrlKey || e.metaKey) return;
+    e.preventDefault();
+    abrirPeca(a.dataset.peca, true);
+  });
 
   // Link direto para uma peça (#peca=id): abre por cima da vitrine
   const inicial = pecaDoEndereco();

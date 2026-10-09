@@ -162,6 +162,16 @@ p {
   background: color-mix(in srgb, var(--btn-bg) 85%, var(--paper));
 }
 
+.btn--outline-light {
+  background: transparent;
+  border-color: color-mix(in srgb, var(--on-black) 55%, var(--black));
+  color: var(--on-black);
+}
+
+.btn--outline-light:hover {
+  border-color: var(--on-black);
+}
+
 .btn--ghost {
   background: transparent;
   border-color: var(--ink);
@@ -183,40 +193,111 @@ p {
   color: var(--on-black);
 }
 
+.topbar {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 6px var(--gutter);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.topbar__logo {
+  padding-left: 0.2em;
+  font: 600 26px/1 var(--cond);
+  letter-spacing: 0.2em;
+}
+
+.topbar__nav {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.topbar__nav a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 10px;
+  font: 500 15px/1 var(--cond);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: color-mix(in srgb, var(--on-black) 82%, var(--black));
+}
+
+.topbar__nav a:hover {
+  color: var(--on-black);
+}
+
+.topbar__wa {
+  padding: 0 !important;
+}
+
 .hero__inner {
   max-width: var(--max);
   margin: 0 auto;
-  padding: 56px var(--gutter) 44px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
+  display: grid;
 }
 
-.hero__logo {
-  /* espaçamento à direita compensado para o nome ficar no centro */
-  padding-left: 0.16em;
-  font: 600 clamp(64px, 21vw, 132px) / 0.9 var(--cond);
-  letter-spacing: 0.16em;
+.hero__photo {
+  position: relative;
+  margin: 0;
 }
 
-.hero__tagline {
-  margin-top: 14px;
-  font: 500 15px/1.4 var(--cond);
-  letter-spacing: 0.32em;
+.hero__photo img {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  max-height: 68svh;
+  object-fit: cover;
+}
+
+/* a foto da fachada é clara: escurece embaixo para o texto encostar nela */
+.hero__photo::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 45%;
+  background: linear-gradient(to bottom, transparent, var(--black));
+}
+
+.hero__text {
+  position: relative;
+  margin-top: -72px;
+  padding: 0 var(--gutter) 40px;
+}
+
+.hero__title {
+  font: 600 clamp(44px, 13.5vw, 96px) / 0.92 var(--cond);
+  letter-spacing: 0.02em;
   text-transform: uppercase;
-  color: color-mix(in srgb, var(--on-black) 80%, var(--black));
 }
 
-.hero__cta {
-  margin: 32px 0 28px;
-  min-width: 200px;
+.hero__title span {
+  display: block;
+}
+
+.hero__title span:nth-child(2) {
+  color: color-mix(in srgb, var(--on-black) 62%, var(--black));
+}
+
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 26px 0 22px;
+}
+
+.hero__actions .btn {
+  flex: 1 1 auto;
 }
 
 .hero__meta {
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 6px;
   margin-top: 6px;
   font-size: 14px;
@@ -310,6 +391,158 @@ p {
   flex: 1;
   height: 2px;
   background: color-mix(in srgb, #5a5c44 70%, var(--ink));
+}
+
+/* ---------- Faixas que deslizam no celular (categorias, destaque) ---------- */
+
+.rail {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 42%;
+  gap: 12px;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 var(--gutter) 6px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding: 0 var(--gutter);
+  scrollbar-width: none;
+}
+
+.rail::-webkit-scrollbar {
+  display: none;
+}
+
+.rail > li {
+  scroll-snap-align: start;
+  min-width: 0;
+}
+
+.rail--cards {
+  grid-auto-columns: 62%;
+}
+
+/* ---------- Categorias ---------- */
+
+.cat {
+  display: grid;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+}
+
+.cat__photo {
+  display: block;
+  aspect-ratio: 3 / 4;
+  max-width: 100%;
+  overflow: hidden;
+  background: var(--photo-bg);
+}
+
+.cat__photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  transition: transform 0.35s ease;
+}
+
+.cat:hover .cat__photo img {
+  transform: scale(1.04);
+}
+
+.cat__nome {
+  margin-top: 8px;
+  font: 600 20px/1.1 var(--cond);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.cat__n {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* ---------- Destaque da estação ---------- */
+
+.feature {
+  background: color-mix(in srgb, var(--ink) 7%, var(--paper));
+}
+
+.feature__texto {
+  max-width: 46ch;
+  margin: -8px 0 20px;
+  color: var(--muted);
+}
+
+/* ---------- Como pedir ---------- */
+
+.steps__list {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.step {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  gap: 14px;
+  padding: 16px 0;
+  border-top: 1px solid var(--line);
+}
+
+.step__n {
+  font: 600 42px/0.9 var(--cond);
+}
+
+.step__titulo {
+  font: 600 21px/1.15 var(--cond);
+  letter-spacing: 0.02em;
+}
+
+.step__texto {
+  margin-top: 4px;
+  color: var(--muted);
+}
+
+/* ---------- Marcas (só texto, nunca logotipo) ---------- */
+
+.brands__list {
+  display: grid;
+  column-gap: 28px;
+  border-top: 1px solid var(--line);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  min-height: 58px;
+  padding: 0 2px;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  background: none;
+  font: 600 25px/1 var(--cond);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-align: left;
+  cursor: pointer;
+}
+
+.brand:hover {
+  background: color-mix(in srgb, var(--ink) 5%, transparent);
+}
+
+.brand__n {
+  font: 500 13px/1 var(--font);
+  letter-spacing: 0;
+  color: var(--muted);
 }
 
 /* ---------- Vitrine ---------- */
@@ -433,6 +666,10 @@ p {
   width: 100%;
   height: 100%;
   object-fit: contain;
+}
+
+.photo--cover img {
+  object-fit: cover;
 }
 
 .card .photo img {
@@ -678,6 +915,12 @@ p {
   gap: 10px;
 }
 
+.store__photos {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
 /* ---------- Rodapé ---------- */
 
 .site-foot {
@@ -752,6 +995,18 @@ p {
     justify-content: start;
   }
 
+  .rail {
+    grid-auto-columns: 28%;
+  }
+
+  .rail--cards {
+    grid-auto-columns: 40%;
+  }
+
+  .brands__list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .promo__nota {
     display: inline;
   }
@@ -770,19 +1025,78 @@ p {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 
+  /* Topo: texto à esquerda, fachada à direita */
+  .hero__inner {
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    align-items: center;
+    gap: 48px;
+    padding: 24px var(--gutter) 56px;
+  }
+
+  .hero__photo {
+    order: 2;
+  }
+
+  .hero__photo img {
+    max-height: 640px;
+  }
+
+  .hero__photo::after {
+    display: none;
+  }
+
+  .hero__text {
+    margin-top: 0;
+    padding: 0;
+  }
+
+  .hero__actions .btn {
+    flex: 0 0 auto;
+  }
+
+  /* As faixas viram grade no computador */
+  .rail {
+    grid-auto-flow: row;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    overflow: visible;
+  }
+
+  .rail--cards {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 24px;
+  }
+
+  .steps__list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: 32px;
+  }
+
+  .brands__list {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
   .store__grid {
     grid-template-columns: 1fr 1fr;
+    grid-template-areas: "info photos" "hours photos" "actions photos";
+    grid-template-rows: auto auto 1fr;
     align-items: start;
     column-gap: 64px;
   }
 
-  .store__actions {
-    grid-column: 1;
+  .store__grid > :first-child {
+    grid-area: info;
   }
 
   .hours {
-    grid-row: 1 / span 2;
-    grid-column: 2;
+    grid-area: hours;
+  }
+
+  .store__actions {
+    grid-area: actions;
+  }
+
+  .store__photos {
+    grid-area: photos;
   }
 
   /* Janela da peça: centralizada, fotos à esquerda e dados à direita */

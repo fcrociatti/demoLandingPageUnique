@@ -49,6 +49,8 @@ window.SITE_CONFIG = {
     nomeCompleto: "Unique",
     frase: "Moda • Estilo • Exclusividade",
     botao: "Ver peças",
+    // Foto do topo: a fachada da loja. posicao = enquadramento (CSS object-position).
+    foto: { src: "assets/loja/fachada.webp", alt: "Fachada da Unique na Av. Itaberaba, com o letreiro da loja", posicao: "center top" },
   },
 
   // Faixa vermelha logo abaixo do topo. Para tirar, troque ativo para false.
@@ -66,6 +68,11 @@ window.SITE_CONFIG = {
     whatsapp: "5511926923426",
     whatsappTexto: "(11) 92692-3426",
     mensagem: "Olá! Vim pelo site e queria tirar uma dúvida.",
+    // Fotos de dentro da loja (verticais 3:4). Lista vazia esconde o bloco.
+    fotos: [
+      { src: "assets/loja/arara-1.webp", alt: "Arara de camisetas pretas na loja" },
+      { src: "assets/loja/arara-2.webp", alt: "Arara de camisetas com cabides de madeira na loja" },
+    ],
     horario: {
       0: [],
       1: [["11:00", "20:00"]],
@@ -83,26 +90,60 @@ window.SITE_CONFIG = {
     // {nome} e {preco} vêm da peça.
     mensagem: "Olá! Tenho interesse {artigo} {nome} ({preco}). Qual tamanho tem disponível?",
     semTamanhos: "Consulte tamanhos",
-    // As fotos atuais foram recortadas dos prints do catálogo (baixa resolução).
-    // Troque pelos arquivos originais com o mesmo nome e apague esta linha.
-    pendenciaFotos: "foto original",
   },
 
-  // Tipos de peça. A ordem aqui é a ordem do filtro.
-  // artigo: como a peça entra na mensagem ("na camiseta", "no moletom").
+  // Blocos com foto antes da vitrine. Tocar filtra a vitrine pelo tipo.
+  // A foto vem do tipo (foto) ou da primeira peça daquele tipo.
+  categorias: {
+    titulo: "Categorias",
+  },
+
+  // Faixa de peças em destaque (troque por estação). pecas = ids da lista de produtos.
+  destaque: {
+    titulo: "Para os dias frios",
+    texto: "Estilo e conforto para os dias frios: a peça essencial para completar o visual.",
+    pecas: ["puffer-preta", "bomber-ralph-lauren", "tricot-zara"],
+  },
+
+  comoPedir: {
+    titulo: "Como pedir",
+    passos: [
+      { titulo: "Escolha a peça", texto: "Filtre por categoria, marca ou preço e abra a peça para ver as fotos." },
+      { titulo: "Toque em Pedir no WhatsApp", texto: "A mensagem já vai pronta, com o nome e o preço da peça." },
+      { titulo: "Combine com a loja", texto: "A equipe responde com os tamanhos disponíveis e combina o resto com você." },
+    ],
+  },
+
+  // Marcas em texto (nunca logotipo). Aparecem as que têm peça na vitrine; tocar filtra.
+  marcas: {
+    titulo: "Marcas",
+  },
+
+  // Tipos de peça. A ordem aqui é a ordem do filtro e das categorias.
+  // artigo: como a peça entra na mensagem ("na camiseta", "no suéter").
+  // plural: nome no bloco de categorias. foto: opcional, para o bloco.
   tipos: {
-    camiseta: { rotulo: "Camiseta", artigo: "na" },
-    polo: { rotulo: "Polo", artigo: "na" },
+    camiseta: { rotulo: "Camiseta", plural: "Camisetas", artigo: "na", foto: "assets/categorias/camisetas.webp" },
+    polo: { rotulo: "Polo", plural: "Polos", artigo: "na" },
+    sueter: { rotulo: "Suéter", plural: "Suéteres", artigo: "no" },
+    jaqueta: { rotulo: "Jaqueta", plural: "Jaquetas", artigo: "na" },
+    calca: { rotulo: "Calça", plural: "Calças", artigo: "na" },
   },
 
   // Uma linha por peça. A ordem aqui é a ordem de "Destaques".
   // tamanhos: null mostra "Consulte tamanhos"; ou uma lista, ex.: ["P", "M", "G"].
+  // marca: null = marca não informada (a peça aparece, mas fica fora do filtro de marca).
+  // pendencia: o que falta confirmar na peça (só aparece na revisão).
   // Não acrescente peça sem nome, preço e fotos confirmados.
   produtos: [
-    { id: "lacoste-vermelha",   marca: "Lacoste", tipo: "camiseta", nome: "Camiseta Lacoste vermelha",   preco: 199, tamanhos: null, fotos: [PECAS + "lacoste-vermelha-1.webp", PECAS + "lacoste-vermelha-2.webp"] },
-    { id: "diesel-caramelo",    marca: "Diesel",  tipo: "polo",     nome: "Polo Diesel caramelo",        preco: 299, tamanhos: null, fotos: [PECAS + "diesel-caramelo-1.webp", PECAS + "diesel-caramelo-2.webp"] },
-    { id: "lacoste-azul-clara", marca: "Lacoste", tipo: "camiseta", nome: "Camiseta Lacoste azul-clara", preco: 199, tamanhos: null, fotos: [PECAS + "lacoste-azul-clara-1.webp", PECAS + "lacoste-azul-clara-2.webp"] },
-    { id: "diesel-branca",      marca: "Diesel",  tipo: "polo",     nome: "Polo Diesel branca",          preco: 299, tamanhos: null, fotos: [PECAS + "diesel-branca-1.webp", PECAS + "diesel-branca-2.webp"] },
+    { id: "puffer-preta",        marca: null,                tipo: "jaqueta",  nome: "Jaqueta Puffer preta",        preco: 399, tamanhos: null, fotos: [PECAS + "puffer-preta-1.webp", PECAS + "puffer-preta-2.webp"], pendencia: "marca" },
+    { id: "lacoste-vermelha",    marca: "Lacoste",           tipo: "camiseta", nome: "Camiseta Lacoste vermelha",   preco: 199, tamanhos: null, fotos: [PECAS + "lacoste-vermelha-1.webp", PECAS + "lacoste-vermelha-2.webp"], pendencia: "foto original" },
+    { id: "bomber-ralph-lauren", marca: "Polo Ralph Lauren", tipo: "jaqueta",  nome: "Bomber Polo Ralph Lauren",    preco: 520, tamanhos: null, fotos: [PECAS + "bomber-ralph-lauren-1.webp", PECAS + "bomber-ralph-lauren-2.webp"] },
+    { id: "diesel-caramelo",     marca: "Diesel",            tipo: "polo",     nome: "Polo Diesel caramelo",        preco: 299, tamanhos: null, fotos: [PECAS + "diesel-caramelo-1.webp", PECAS + "diesel-caramelo-2.webp"], pendencia: "foto original" },
+    { id: "tricot-zara",         marca: "Zara",              tipo: "sueter",   nome: "Tricot Zara",                 preco: 460, tamanhos: null, fotos: [PECAS + "tricot-zara-1.webp", PECAS + "tricot-zara-2.webp"] },
+    { id: "lacoste-azul-clara",  marca: "Lacoste",           tipo: "camiseta", nome: "Camiseta Lacoste azul-clara", preco: 199, tamanhos: null, fotos: [PECAS + "lacoste-azul-clara-1.webp", PECAS + "lacoste-azul-clara-2.webp"], pendencia: "foto original" },
+    { id: "calca-zara",          marca: "Zara",              tipo: "calca",    nome: "Calça Zara",                  preco: 380, tamanhos: null, fotos: [PECAS + "calca-zara-1.webp", PECAS + "calca-zara-2.webp"] },
+    { id: "diesel-branca",       marca: "Diesel",            tipo: "polo",     nome: "Polo Diesel branca",          preco: 299, tamanhos: null, fotos: [PECAS + "diesel-branca-1.webp", PECAS + "diesel-branca-2.webp"], pendencia: "foto original" },
   ],
 
   redes: {
