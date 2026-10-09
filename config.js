@@ -51,6 +51,8 @@ window.SITE_CONFIG = {
     botao: "Ver peças",
     // Foto do topo (alta resolução, 1066×1332). posicao = enquadramento (CSS object-position).
     foto: { src: "assets/loja/banner-tricot.webp", alt: "Modelo vestindo o Tricot Zara diante da parede escura", posicao: "center 15%", largura: 1066, altura: 1332 },
+    // No computador, duas peças ao lado da foto do topo (ids da lista de produtos).
+    lookbook: ["puffer-preta", "bomber-ralph-lauren"],
   },
 
   // Faixa vermelha logo abaixo do topo. Para tirar, troque ativo para false.
@@ -92,12 +94,6 @@ window.SITE_CONFIG = {
     semTamanhos: "Consulte tamanhos",
   },
 
-  // Blocos com foto antes da vitrine. Tocar filtra a vitrine pelo tipo.
-  // A foto vem do tipo (foto) ou da primeira peça daquele tipo.
-  categorias: {
-    titulo: "Categorias",
-  },
-
   // Faixa de peças em destaque (troque por estação). pecas = ids da lista de produtos.
   destaque: {
     titulo: "Para os dias frios",
@@ -105,25 +101,24 @@ window.SITE_CONFIG = {
     pecas: ["puffer-preta", "bomber-ralph-lauren", "tricot-zara"],
   },
 
+  // Os passos aparecem ao lado de um exemplo da mensagem que o botão escreve (exemplo = id da peça).
   comoPedir: {
     titulo: "Como pedir",
-    passos: [
-      { titulo: "Escolha a peça", texto: "Filtre por categoria, marca ou preço e abra a peça para ver as fotos." },
-      { titulo: "Toque em Pedir no WhatsApp", texto: "A mensagem já vai pronta, com o nome e o preço da peça." },
-      { titulo: "Combine com a loja", texto: "A equipe responde com os tamanhos disponíveis e combina o resto com você." },
-    ],
+    passos: ["Escolha a peça", "Toque em Pedir no WhatsApp", "Combine o tamanho com a loja"],
+    nota: "Sem cadastro e sem carrinho: a conversa é direto com a Unique.",
+    exemplo: "tricot-zara",
   },
 
-  // Marcas em texto (nunca logotipo). Aparecem as que têm peça na vitrine; tocar filtra.
+  // Marcas em texto grande (nunca logotipo). Aparecem as que têm peça na vitrine; tocar filtra.
   marcas: {
     titulo: "Marcas",
   },
 
-  // Tipos de peça. A ordem aqui é a ordem do filtro e das categorias.
+  // Tipos de peça. A ordem aqui é a ordem da barra de categorias.
   // artigo: como a peça entra na mensagem ("na camiseta", "no suéter").
-  // plural: nome no bloco de categorias. foto: opcional, para o bloco.
+  // plural: nome na barra de categorias.
   tipos: {
-    camiseta: { rotulo: "Camiseta", plural: "Camisetas", artigo: "na", foto: "assets/categorias/camisetas.webp" },
+    camiseta: { rotulo: "Camiseta", plural: "Camisetas", artigo: "na" },
     polo: { rotulo: "Polo", plural: "Polos", artigo: "na" },
     sueter: { rotulo: "Suéter", plural: "Suéteres", artigo: "no" },
     jaqueta: { rotulo: "Jaqueta", plural: "Jaquetas", artigo: "na" },

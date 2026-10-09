@@ -11,18 +11,28 @@ HTML, CSS e JavaScript puros: não precisa instalar nada nem rodar build.
 
 ## Seções
 
-1. Topo: nome em texto, foto do Tricot Zara em alta resolução, "Moda • Estilo • Exclusividade", botões Ver peças e WhatsApp, endereço e selo aberto/fechado.
-2. Faixa de promoção (único vermelho da página).
-3. Categorias: um bloco com foto por tipo de peça; tocar filtra a vitrine.
-4. Destaque da estação ("Para os dias frios"): troque as peças em `destaque.pecas`.
-5. Como pedir: três passos.
-6. Marcas: só em texto, a partir das peças; tocar filtra a vitrine.
-7. Vitrine: filtros por marca e tipo, ordenar por preço, peça aberta com Pedir no WhatsApp.
-8. A loja: endereço, horário, fachada e foto de dentro, Como chegar e WhatsApp.
-9. Rodapé.
+Direção visual "lookbook na parede": a parede escura das fotos do catálogo vira o
+chão de algumas seções, para as peças se fundirem na página.
 
-Para tirar uma seção, apague o bloco dela no `config.js` (`categorias`, `destaque`,
-`comoPedir`, `marcas`).
+1. Topo: faixa de prévia, selo aberto/fechado, foto do Tricot Zara em alta e o nome
+   UNIQUE de ponta a ponta (no computador, como capa de revista, com duas peças ao
+   lado: `marca.lookbook`).
+2. Promoção em letreiro corrido (único vermelho da página). Quem desativa animações
+   no aparelho vê o texto parado.
+3. Vitrine: barra de categorias fixa (gruda abaixo da faixa de prévia), marcas,
+   ordenar por preço. No computador, passar o mouse mostra a segunda foto.
+4. "Para os dias frios": as peças de `destaque.pecas` na cor da parede, em degrau.
+5. Como pedir: os passos ao lado da mensagem real que o botão monta (`comoPedir.exemplo`).
+6. Marcas em tipografia grande, só texto; tocar filtra a vitrine.
+7. A loja: endereço, horário, fachada e foto de dentro, Como chegar e WhatsApp.
+8. Rodapé.
+
+Movimento: o nome sobe letra por letra ao abrir e as fotos se revelam ao entrar na
+tela (onde o navegador acompanha a rolagem). A foto do cartão "cresce" até a janela
+da peça onde há suporte. Tudo some com "reduzir movimento" ligado no aparelho.
+
+Para tirar uma seção, apague o bloco dela no `config.js` (`destaque`, `comoPedir`,
+`marcas`).
 
 ## Estrutura
 
@@ -33,7 +43,6 @@ css/styles.css    visual
 js/app.js         monta a página a partir do config.js
 assets/produtos/  fotos das peças (2 por peça)
 assets/loja/      banner do topo (alta resolução), fachada e fotos de dentro da loja
-assets/categorias/ foto opcional de um tipo (senão usa a 1ª peça daquele tipo)
 ```
 
 ## Acrescentar uma peça
@@ -50,7 +59,7 @@ assets/categorias/ foto opcional de um tipo (senão usa a 1ª peça daquele tipo
 - `tipo`: uma chave de `tipos` (`camiseta`, `polo`, `sueter`, `jaqueta`, `calca`).
   Para um tipo novo, acrescente em `tipos`, ex.:
   `moletom: { rotulo: "Moletom", plural: "Moletons", artigo: "no" }`. Ele ganha
-  bloco nas categorias e opção no filtro sozinho.
+  aba na barra de categorias sozinho.
 - `marca`: `null` quando a loja não informou. A peça aparece, mas fica fora do
   filtro e da lista de marcas.
 - `pendencia`: o que falta confirmar na peça (ex.: `"marca"`, `"foto original"`).
